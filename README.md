@@ -217,10 +217,12 @@ LIMIT 10;
 ```
 
 ### table for mysql:
-
-
-
-
+```
+CREATE TABLE result51 (
+	category VARCHAR(50),
+	count INT
+);
+```
 
 # 5.2
 ```
@@ -231,13 +233,23 @@ FROM (
     SELECT category, product, cnt, row_number() 
            over (PARTITION BY category ORDER BY cnt DESC) as rank
     FROM (
-        SELECT category, product, sum(product) AS cnt
+        SELECT category, product, cnt(product) AS cnt
         FROM test2
         GROUP BY category, product
     ) a
 ) ranked_mytable
 WHERE ranked_mytable.rank <= 10
 ORDER BY category, rank;
+```
+
+### table for mysql:
+```
+CREATE TABLE result52 (
+	category VARCHAR(50),
+	product VARCHAR(50),
+	count INT,
+	place INT
+);
 ```
 
 # 6
@@ -254,4 +266,12 @@ ON
 ORDER BY t1.s DESC
 LIMIT 10;
 ```
+### table for mysql:
 
+```
+CREATE TABLE result6 (
+	ip VARCHAR(50),
+	geoname_id VARCHAR(50),
+	sum INT
+);
+```
