@@ -223,7 +223,7 @@ CREATE TABLE result51 (
 	count INT
 );
 ```
-## sqoop
+### sqoop
 
 ```
 sqoop export --connect jdbc:mysql://127.0.0.1/result --username root --password cloudera --table result51 --export-dir /user/cloudera/result/1/000000_0 --input-fields-terminated-by '\t'
@@ -256,7 +256,7 @@ CREATE TABLE result52 (
 	place INT
 );
 ```
-## sqoop
+### sqoop
 ```
 sqoop export --connect jdbc:mysql://127.0.0.1/result --username root --password cloudera --table result52 --export-dir /user/cloudera/result/2/000000_0 --input-fields-terminated-by '\t'
 
@@ -285,7 +285,7 @@ CREATE TABLE result6 (
 	sum INT
 );
 ```
-## sqoop
+### sqoop
 ```
 sqoop export --connect jdbc:mysql://127.0.0.1/result --username root --password cloudera --table result6 --export-dir /user/cloudera/result/3/000000_0 --input-fields-terminated-by '\t'
 ```
