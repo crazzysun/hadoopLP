@@ -233,7 +233,7 @@ FROM (
     SELECT category, product, cnt, row_number() 
            over (PARTITION BY category ORDER BY cnt DESC) as rank
     FROM (
-        SELECT category, product, cnt(product) AS cnt
+        SELECT category, product, count(product) AS cnt
         FROM test2
         GROUP BY category, product
     ) a
@@ -255,7 +255,7 @@ CREATE TABLE result52 (
 # 6
 ```
 INSERT OVERWRITE DIRECTORY '/user/cloudera/result/3'
-ROW FORMAT DELIMITED FIELDS TERMINATED BY ','
+ROW FORMAT DELIMITED FIELDS TERMINATED BY '\t'
 SELECT t1.ip, t2.geoname_id, t1.s
 FROM 
     (SELECT ip, sum(price) as s FROM test2 GROUP BY ip) t1 
@@ -274,4 +274,8 @@ CREATE TABLE result6 (
 	geoname_id VARCHAR(50),
 	sum INT
 );
+```
+## sqoop
+```
+sqoop export --connect jdbc:mysql://127.0.0.1/result --username root --password cloudera --table result6 --export-dir /user/cloudera/result/3/000000_0 --input-fields-terminated-by '\t'
 ```
