@@ -203,7 +203,7 @@ LOCATION '/user/cloudera/ip/';
 # 5.1
 ```
 INSERT OVERWRITE DIRECTORY '/user/cloudera/results/1'
-ROW FORMAT DELIMITED FIELDS TERMINATED BY ','
+ROW FORMAT DELIMITED FIELDS TERMINATED BY '\t'
 SELECT
   category,
   COUNT(*) AS cnt
@@ -223,11 +223,16 @@ CREATE TABLE result51 (
 	count INT
 );
 ```
+## sqoop
+
+```
+sqoop export --connect jdbc:mysql://127.0.0.1/result --username root --password cloudera --table result51 --export-dir /user/cloudera/result/1/000000_0 --input-fields-terminated-by '\t'
+```
 
 # 5.2
 ```
 INSERT OVERWRITE DIRECTORY '/user/cloudera/results/2'
-ROW FORMAT DELIMITED FIELDS TERMINATED BY ','
+ROW FORMAT DELIMITED FIELDS TERMINATED BY '\t'
 SELECT category, product, cnt, rank
 FROM (
     SELECT category, product, cnt, row_number() 
@@ -250,6 +255,11 @@ CREATE TABLE result52 (
 	count INT,
 	place INT
 );
+```
+## sqoop
+```
+sqoop export --connect jdbc:mysql://127.0.0.1/result --username root --password cloudera --table result52 --export-dir /user/cloudera/result/2/000000_0 --input-fields-terminated-by '\t'
+
 ```
 
 # 6
