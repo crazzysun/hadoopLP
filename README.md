@@ -260,7 +260,7 @@ public class Solution{
 
 # create product table
 ```
-CREATE EXTERNAL TABLE IF NOT EXISTS productWithGeo (name STRING, type STRING, ip STRING, date STRING, price INT, geoname_id INT)
+CREATE EXTERNAL TABLE IF NOT EXISTS productWithGeo (product STRING, category STRING, ip STRING, date STRING, price INT, geoname_id INT)
 PARTITIONED BY (year INT, month INT, day INT)
 ROW FORMAT DELIMITED FIELDS TERMINATED BY ','
 STORED AS TEXTFILE
