@@ -1,0 +1,63 @@
+import org.apache.spark.SparkContext
+import org.apache.spark.SparkConf
+
+case class Sale(product: String, category: String, ip: String, date: String, price: Int, geo: Int)
+
+object Main {
+  def main(args: Array[String]): Unit = {
+    val conf = new SparkConf().setAppName("app").setMaster("local[2]")
+    val sc = new SparkContext(conf)
+
+    //ex51(sc)
+    //ex52(sc)
+    ex6(sc)
+  }
+
+  def ex51(sc: SparkContext): Unit = {
+    val events = sc.textFile("file:////Users/ayarunina/Documents/2017/05/*").map(_.split(","))
+
+    events.map(e => (e(1), 1))
+      .reduceByKey(_ + _)
+      .sortBy(x => x._2)
+      .take(10).foreach(println)
+  }
+
+  // Select top 10 most frequently purchased product in each category
+  def ex52(sc: SparkContext): Unit = {
+
+    val events = sc.textFile("file:////Users/ayarunina/Documents/2017/05/*").map(_.split(","))
+
+    val r = events
+      .map(e => ((e(0), e(1)), 1))
+      .reduceByKey(_ + _)
+      //      .map(e => (e._1._2, (e._1._1, e._2)))
+
+      .map(e => (e._1._2, (e._1._1, e._2) :: Nil))
+      .reduceByKey((x, y) => (x ++ y).sortBy(x => -x._2))
+      .map(x => (x._1, x._2.take(10)))
+      .collect()
+      .foreach(println)
+
+    //    val zero = List.empty[(String, Int)]
+    //    val seq = (zeroValue: List[(String, Int)],
+    //               e: (String, Int)) => {
+    //      val nvalue = e :: zeroValue
+    //      nvalue.sortBy(-_._2).take(10)
+    //    }
+    //    val comb = (v1: List[(String, Int)], v2: List[(String, Int)]) => (v1 ++ v2).sortBy(-_._2).take(10)
+    //    val a = r.aggregateByKey(zero)(seq, comb)
+    //    a.collect().foreach(println)
+  }
+
+  def ex6(sc: SparkContext): Unit = {
+    val countries = sc.textFile("file:////Users/ayarunina/Downloads/GeoLite2-Country-CSV_20170704/GeoLite2-Country-Locations-de.csv").map(_.split(","))
+    val events = sc.textFile("file:////Users/ayarunina/Documents/2017/05/*").map(_.split(","))
+
+    val a = events.map(e => (e(5), e(4).toInt))
+      .reduceByKey(_ + _).sortBy(-_._2)
+    val b = countries.map(c => (c(0), c(3)))
+    a.join(b).map(x => (x._2._2, x._2._1)).sortBy(-_._2).take(10).foreach(println)
+  }
+}
+
+
