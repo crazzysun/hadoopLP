@@ -312,6 +312,22 @@ STORED AS TEXTFILE
 LOCATION '/user/cloudera/ip/';
 ```
 
+# create country table
+
+```
+CREATE EXTERNAL TABLE IF NOT EXISTS country (
+geoname_id STRING,
+locale_code STRING,
+continent_code STRING,
+continent_name STRING,
+country_iso_code STRING,
+country_name STRING
+)
+ROW FORMAT DELIMITED FIELDS TERMINATED BY ','
+STORED AS TEXTFILE
+LOCATION '/user/cloudera/ip/contryName';
+```
+
 # 5.1
 ```
 INSERT OVERWRITE DIRECTORY '/user/cloudera/results/1'
@@ -378,11 +394,11 @@ sqoop export --connect jdbc:mysql://127.0.0.1/result --username root --password 
 ```
 INSERT OVERWRITE DIRECTORY '/user/cloudera/result/3'
 ROW FORMAT DELIMITED FIELDS TERMINATED BY ','
-SELECT t1.geoname_id, t2.geoname_id, t2.represented_country_geoname_id, t1.s
+SELECT t2.country_name, t1.s
 FROM 
     (SELECT geoname_id, sum(price) as s FROM productwithgeo GROUP BY geoname_id) t1 
 LEFT JOIN
-    (SELECT geoname_id, represented_country_geoname_id FROM iptable) t2
+    (SELECT geoname_id, country_name FROM country) t2
 ON
     t1.geoname_id = t2.geoname_id
 ORDER BY t1.s DESC
@@ -392,8 +408,6 @@ LIMIT 10;
 
 ```
 CREATE TABLE result6 (
-	ip VARCHAR(50),
-	geoname_id VARCHAR(50),
 	country_name VARCHAR(50),
 	sum INT
 );
