@@ -101,7 +101,7 @@ public class CustomInterceptor implements Interceptor {
     private ArrayList<Pair> maskToCountry;
 
     public void initialize() {
-        System.err.println("Initialize!!!");
+        System.err.println("initialize...");
         maskToCountry = new ArrayList<Pair>();
 
         String line;
@@ -112,7 +112,6 @@ public class CustomInterceptor implements Interceptor {
                 if (!first) {
                     String[] columns = line.split(",");
                     maskToCountry.add(new Pair(columns[0], columns[1]));
-                    //System.err.println(columns[0] + " " + columns[1]);
                 } else {
                     first = false;
                 }
@@ -126,14 +125,11 @@ public class CustomInterceptor implements Interceptor {
         String eventBody = new String(event.getBody());
         ArrayList<String> fields = new ArrayList<String>(Arrays.asList(eventBody.split(",")));
         String ip = fields.get(2);
-        //System.err.println("ip = " + ip);
         String geoname_id = "";
 
         for (Pair p : maskToCountry) {
             try {
-                //System.err.println("...");
                 if (validateIpByMask(ip, p.first)) {
-                    //System.err.println("Find! " + p.second);
                     geoname_id = p.second;
                     break;
                 }
@@ -144,7 +140,6 @@ public class CustomInterceptor implements Interceptor {
 
         fields.add(geoname_id);
         String modifiedEvent = StringUtils.join(fields, ",");
-       // System.err.println("event = " + modifiedEvent);
         event.setBody(modifiedEvent.getBytes());
 
         return event;
