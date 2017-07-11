@@ -393,7 +393,7 @@ sqoop export --connect jdbc:mysql://127.0.0.1/result --username root --password 
 # 6
 ```
 INSERT OVERWRITE DIRECTORY '/user/cloudera/result/3'
-ROW FORMAT DELIMITED FIELDS TERMINATED BY ','
+ROW FORMAT DELIMITED FIELDS TERMINATED BY '\t'
 SELECT t2.country_name, t1.s
 FROM 
     (SELECT geoname_id, sum(price) as s FROM productwithgeo GROUP BY geoname_id) t1 
